@@ -15,15 +15,11 @@ public class ClearPluginCommand implements CommandExecutor {
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!sender.isOp()) {
-            sender.sendMessage("You do not have permission to clean players' inventories");
-            return false;
-        }
         if (args.length > 1) {
             return false;
         }
 
-        Player player = null;
+        Player player;
 
         if (args.length == 1) {
             player = plugin.matchPlayer(args, sender);
@@ -32,6 +28,14 @@ public class ClearPluginCommand implements CommandExecutor {
             return false;
         } else {
             player = (Player)sender;
+        }
+
+        if ((player == sender) && (!sender.hasPermission("scrapbukkit.clear.self"))) {
+            sender.sendMessage(ChatColor.RED + "You do not have permission to clear your own inventory");
+            return true;
+        } else if (!sender.hasPermission("scrapbukkit.clear.other")) {
+            sender.sendMessage(ChatColor.RED + "You do not have permission to clear the inventory of " + player.getDisplayName());
+            return true;
         }
 
         plugin.announceCheat(sender, "Cleared inventory of " + player.getDisplayName());

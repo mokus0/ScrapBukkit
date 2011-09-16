@@ -20,13 +20,9 @@ public class TakePluginCommand implements CommandExecutor {
         if ((args.length > 3) || (args.length == 0)) {
             return false;
         }
-        if (!sender.isOp()) {
-            sender.sendMessage("You do not have permission to take players' items");
-            return false;
-        }
 
-        Player player = null;
-        Material material = null;
+        Player player;
+        Material material;
         int count = -1;
 
         if (args.length >= 2) {
@@ -46,6 +42,14 @@ public class TakePluginCommand implements CommandExecutor {
                 sender.sendMessage(ChatColor.RED + "'" + args[2] + "' is not a number!");
                 return false;
             }
+        }
+
+        if ((player == sender) && (!sender.hasPermission("scrapbukkit.remove.self"))) {
+            sender.sendMessage(ChatColor.RED + "You do not have permission to remove your own items");
+            return true;
+        } else if (!sender.hasPermission("scrapbukkit.remove.other")) {
+            sender.sendMessage(ChatColor.RED + "You do not have permission to remove items from " + player.getDisplayName());
+            return true;
         }
 
         if (material == null) {

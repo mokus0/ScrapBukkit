@@ -1,6 +1,7 @@
 package com.dinnerbone.bukkit.scrap.commands;
 
 import com.dinnerbone.bukkit.scrap.ScrapBukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -25,14 +26,19 @@ public class TimePluginCommand implements CommandExecutor {
         long time = world.getTime();
 
         if (args.length == 0) {
+            if (!sender.hasPermission("scrapbukkit.time.view")) {
+                sender.sendMessage(ChatColor.RED + "You do not have permission to view the time");
+                return true;
+            }
+
             sender.sendMessage(describeTime(time));
             return true;
         }
 
         if (args.length == 1) {
-            if (!sender.isOp()) {
-                sender.sendMessage("You do not have permission to alter the time");
-                return false;
+            if (!sender.hasPermission("scrapbukkit.time.change")) {
+                sender.sendMessage(ChatColor.RED + "You do not have permission to change the time");
+                return true;
             }
             
             String subcommand = args[0];
