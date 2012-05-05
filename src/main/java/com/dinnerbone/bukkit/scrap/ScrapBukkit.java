@@ -1,4 +1,3 @@
-
 package com.dinnerbone.bukkit.scrap;
 
 import com.dinnerbone.bukkit.scrap.commands.*;
@@ -19,7 +18,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.util.config.Configuration;
+import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.file.FileConfiguration;
 
 /**
  * Miscellaneous administrative commands
@@ -27,15 +27,9 @@ import org.bukkit.util.config.Configuration;
  * @author Dinnerbone
  */
 public class ScrapBukkit extends JavaPlugin {
-
     public boolean nameAndShame = true;
 
-    public void onDisable() {
-        //PluginManager pm = getServer().getPluginManager();
-    }
-
-    public void onEnable() {       
-        // EXAMPLE: Custom code, here we just output some info so we can check all is well
+    public void onEnable() {
         PluginDescriptionFile pdfFile = this.getDescription();
         System.out.println( pdfFile.getName() + " version " + pdfFile.getVersion() + " is enabled!" );
 
@@ -52,7 +46,7 @@ public class ScrapBukkit extends JavaPlugin {
 
     public void loadConfig() {
         try {
-            Configuration config = this.getConfiguration();
+            Configuration config = this.getConfig();
             nameAndShame = config.getBoolean("nameAndShame", nameAndShame);
 
         } catch (Exception e) {
@@ -61,9 +55,8 @@ public class ScrapBukkit extends JavaPlugin {
     }
 
     public void saveConfig() {
-        Configuration config = getConfiguration();
-        config.setProperty("nameAndShame", nameAndShame);
-        config.save();
+        getConfig().set("nameAndShame", nameAndShame);
+        super.saveConfig();
     }
 
     public boolean teleport(final Player victim, final String destName) {
@@ -92,9 +85,9 @@ public class ScrapBukkit extends JavaPlugin {
     }
 
     public boolean teleport(final Player victim, final Player destination) {
-        if ((victim == null) || (destination == null)) 
+        if ((victim == null) || (destination == null))
             return false;
-        
+
         victim.teleport(destination);
         return true;
     }
